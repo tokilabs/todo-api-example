@@ -1,0 +1,21 @@
+{
+  "ignore": [
+    ".git",
+    "node_modules"
+  ],
+  "verbose": false,
+  "delay": 2000,
+  "watch": [
+    "lib",
+    "node_modules/@cashfarm"
+  ],
+  "events": {
+    "restart": "osascript -e 'display notification \"App restarted due to:\n'$FILENAME'\" with title \"nodemon\"'"
+  },
+  "env": {
+    "PORT": "8000",
+    "DEBUG": "tractor*,plow*,inversify*",
+    "DEBUG_COLORS": true
+  },
+  "exec": "node --inspect --trace-warnings --trace-deprecation lib/server.js"
+}
