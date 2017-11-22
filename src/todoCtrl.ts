@@ -40,7 +40,7 @@ export class TodoController {
   }
 
   @Endpoint('GET', '/todos/{id}', {
-    description: 'Creates a todo',
+    description: 'Returns a single todo',
     validate: {
       params: {
         id: Joi.string().guid()

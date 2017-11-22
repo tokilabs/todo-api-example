@@ -29,7 +29,7 @@
     "@cashfarm/lang": "^0.8.0",
     "@cashfarm/plow": "^0.4.0-RC.1",
     "@cashfarm/store": "^0.7.2",
-    "@cashfarm/tractor": "^0.0.2",
+    "@cashfarm/tractor": "^0.0.3",
     "boom": "^7.1.1",
     "hapi": "^16.6.2",
     "inversify": "^4.5.1",
