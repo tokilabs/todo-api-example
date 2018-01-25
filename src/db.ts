@@ -1,6 +1,13 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { createPool, Pool, PoolConfig } from 'mysql';
 
+import { IEventStore, GesEventStore } from '@cashfarm/plow';
+
 const debug = require('debug')('todos');
+
+if (fs.existsSync(path.join(__dirname, '..', '.env')))
+  require('env2')(path.join(__dirname, '..', '.env'));
 
 const connInfo: PoolConfig = {
   database : process.env.TODOS_DB_NAME || 'todos',
@@ -13,3 +20,5 @@ const connInfo: PoolConfig = {
 debug('Database connection info', connInfo);
 
 export const ConnectionPool: Pool = createPool(connInfo);
+
+export const eventStore = new GesEventStore(process.env.TODOS_ES_HOST || 'localhost', parseInt(process.env.TODOS_ES_PORT) || 1113);

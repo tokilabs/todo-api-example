@@ -3,6 +3,8 @@
 import 'source-map-support/register';
 
 import { createServer, ITractorServer } from '@cashfarm/tractor';
+import { IEventStore, IEventPublisher, EventBus, RabbitMQTransport, IEventBus } from '@cashfarm/plow';
+import { eventStore } from './db';
 
 export const ServiceName = 'TodoService';
 
@@ -18,6 +20,12 @@ export const server = createServer(
 .then(srv => {
   // If your are using @Controller decorator, just require your controllers
   require('./todoCtrl');
+
+  const container = srv.getContainer();
+
+  container.bind(IEventStore).toConstantValue(eventStore);
+  container.bind(IEventBus).toConstantValue(new EventBus('todos', new RabbitMQTransport()));
+  container.bind(IEventPublisher).toConstantValue(new EventBus('todos', new RabbitMQTransport()));
 
   // if running directly, start the server
   if (!module.parent) {

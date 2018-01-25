@@ -7,20 +7,27 @@ import { provide } from '@cashfarm/plow';
 import { IController } from '@cashfarm/tractor/interfaces';
 import { Endpoint } from '@cashfarm/tractor/decorators';
 
-import { Todo } from './todo';
-import { TodoStore } from './todoStore';
+import { Todo } from './domain/todo';
+import { TodoStore } from './data/todoStore';
+import { TodoRepository } from "./data/todoRepository";
 
 import { Controller } from '@cashfarm/tractor';
+const debug = require('debug')('todos:ctrl');
 
 @Controller
 export class TodoController {
-  constructor(@inject(TodoStore) private store: TodoStore) {}
+  constructor(
+    @inject(TodoStore) private store: TodoStore,
+    @inject(TodoRepository) private repository: TodoRepository
+  ) {}
 
   @Endpoint('GET', '/todos', {
     description: 'Returns all todos'
   })
   public list(req: Hapi.Request, reply: Hapi.ReplyNoContinue) {
-    return this.store.findAll();
+    debug('GET /todos');
+
+    return reply(this.store.findAll());
   }
 
   @Endpoint('POST', '/todos', {
@@ -34,9 +41,11 @@ export class TodoController {
   })
   public create(req: Hapi.Request, reply: Hapi.ReplyNoContinue) {
     const todo = new Todo(req.payload.description);
-    todo.done = !!req.payload.done;
 
-    return this.store.save(todo);
+    if (req.payload.done)
+      todo.complete();
+
+    return reply(this.store.save(todo));
   }
 
   @Endpoint('GET', '/todos/{id}', {
@@ -64,11 +73,20 @@ export class TodoController {
     }
   })
   public async update(req: Hapi.Request, reply: Hapi.ReplyNoContinue) {
-    const todo = await this.store.findById(req.params.id);
+    const todo = await this.repository.getById(req.payload.id);
 
-    if (!todo)
+    if (!todo) {
       return reply(Boom.notFound(`Todo with id ${req.params.id} could not be found`));
+    }
+    
+    if (req.payload.description) {
+      todo.updateDescription(req.payload.description);
+    }
 
-    return reply(this.store.save(todo));
+    if (req.payload.done) {
+      todo.complete();
+    }
+    
+    return reply('Todo updated');
   }
 }
