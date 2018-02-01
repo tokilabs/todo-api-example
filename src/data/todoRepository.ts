@@ -1,15 +1,15 @@
 import { inject } from 'inversify';
 
 import { Guid } from '@cashfarm/lang';
-import { EventSourcedRepositoryOf, IEventStore, IEventPublisher, provide } from '@cashfarm/plow';
+import { ESRepository, IEventStore, IEventBus, provide } from '@cashfarm/plow';
 
 import { Todo } from '../domain/todo';
 
 @provide(TodoRepository)
-export class TodoRepository extends EventSourcedRepositoryOf<Todo, Guid> {
+export class TodoRepository extends ESRepository<Todo, Guid> {
   constructor(
     @inject(IEventStore) protected storage: IEventStore,
-    @inject(IEventPublisher) eventPublisher: IEventPublisher
+    @inject(IEventBus) eventPublisher: IEventBus
   ) {
     super(storage, Todo, eventPublisher);
   }

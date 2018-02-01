@@ -1,8 +1,8 @@
 import { Guid, SerializeOptions, Expose } from '@cashfarm/lang';
-import { AggregateRoot, DomainException } from '@cashfarm/plow';
+import { DomainException, ESAggregateRoot } from '@cashfarm/plow';
 import * as events from './events';
 
-export class Todo extends AggregateRoot<Guid> {
+export class Todo extends ESAggregateRoot<Guid> {
 
   @Expose({ name: 'id' })
   protected _id: Guid;
@@ -27,7 +27,6 @@ export class Todo extends AggregateRoot<Guid> {
   public get createdAt(): Date {
     return this._createdAt;
   }
-
 
   constructor(description?: string) {
     super(new Guid());

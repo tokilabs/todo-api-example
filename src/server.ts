@@ -3,8 +3,12 @@
 import 'source-map-support/register';
 
 import { createServer, ITractorServer } from '@cashfarm/tractor';
-import { IEventStore, IEventPublisher, EventBus, RabbitMQTransport, IEventBus } from '@cashfarm/plow';
+import { IEventStore, EventBus, RabbitMQTransport, IEventBus } from '@cashfarm/plow';
 import { eventStore } from './db';
+
+import { PlowConfig } from '@cashfarm/plow';
+
+PlowConfig.appPackageName = '@cashfarm/examples-todo-api';
 
 export const ServiceName = 'TodoService';
 
@@ -25,7 +29,6 @@ export const server = createServer(
 
   container.bind(IEventStore).toConstantValue(eventStore);
   container.bind(IEventBus).toConstantValue(new EventBus('todos', new RabbitMQTransport()));
-  container.bind(IEventPublisher).toConstantValue(new EventBus('todos', new RabbitMQTransport()));
 
   // if running directly, start the server
   if (!module.parent) {

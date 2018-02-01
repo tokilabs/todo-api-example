@@ -9,7 +9,7 @@ import { Endpoint } from '@cashfarm/tractor/decorators';
 
 import { Todo } from './domain/todo';
 import { TodoStore } from './data/todoStore';
-import { TodoRepository } from "./data/todoRepository";
+import { TodoRepository } from './data/todoRepository';
 
 import { Controller } from '@cashfarm/tractor';
 const debug = require('debug')('todos:ctrl');
@@ -78,7 +78,7 @@ export class TodoController {
     if (!todo) {
       return reply(Boom.notFound(`Todo with id ${req.params.id} could not be found`));
     }
-    
+
     if (req.payload.description) {
       todo.updateDescription(req.payload.description);
     }
@@ -86,7 +86,7 @@ export class TodoController {
     if (req.payload.done) {
       todo.complete();
     }
-    
+
     return reply('Todo updated');
   }
 }
