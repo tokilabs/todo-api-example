@@ -24,3 +24,7 @@ npm-debug.log
 
 deploy\.sh
 .env
+
+data/
+
+\.queues

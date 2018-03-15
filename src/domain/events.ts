@@ -1,5 +1,5 @@
-import { Guid, FQN } from '@cashfarm/lang';
-import { DomainEvent, Symbols } from '@cashfarm/plow';
+import { Guid, Class } from '@cashfarm/lang';
+import { DomainEvent } from '@cashfarm/plow';
 
 // tslint:disable:max-classes-per-file
 
@@ -7,6 +7,8 @@ import { DomainEvent, Symbols } from '@cashfarm/plow';
 export class TodoCreated {
 
   public readonly done = false;
+  
+  @Class(() => Date)
   public readonly createdAt = new Date();
 
   constructor(

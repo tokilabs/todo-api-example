@@ -10,9 +10,9 @@
     reflect-metadata "^0.1.10"
     uuid "^3.1.0"
 
-"@cashfarm/plow@^0.5.0-rc.3":
-  version "0.5.0-rc.3"
-  resolved "https://registry.npmjs.org/@cashfarm/plow/-/plow-0.5.0-rc.3.tgz#9aa707e1297c818899990d7badd8b46ef6bb3e8d"
+"@cashfarm/plow@^0.5.0-rc.6":
+  version "0.5.0-rc.6"
+  resolved "https://registry.yarnpkg.com/@cashfarm/plow/-/plow-0.5.0-rc.6.tgz#47d8912cd2f22c6748c4a9fcf71dfdfec4c419c4"
   dependencies:
     "@cashfarm/lang" "^0.8.4"
     amqplib "^0.5.1"

@@ -1,6 +1,6 @@
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 
-import { Handle, Projection } from '@cashfarm/plow';
+import { Handle, IEventBus, Projection } from '@cashfarm/plow';
 import { hydrate } from '@cashfarm/lang';
 
 import * as events from '../domain/events';
@@ -9,15 +9,21 @@ import { TodoStore , TodoDto } from '../data/todoStore';
 const debug = require('debug')('todo:projections');
 
 // This decorator will register the projection in the event bus
+@injectable()
 @Projection(
-  events.TodoCreated, events.TodoCompleted, events.TodoDescriptionUpdated, events.TodoUncompleted
+  events.TodoCreated,
+  events.TodoCompleted,
+  events.TodoDescriptionUpdated,
+  events.TodoUncompleted
 )
 export class TodoProjections {
 
-  constructor(@inject(TodoStore) private todos: TodoStore) {}
+  constructor(@inject(TodoStore) private todos: TodoStore, @inject(IEventBus) bus: IEventBus) {
+    bus.subscribe(events.TodoCreated, this);
+  }
 
   public [Handle(events.TodoCreated)](event: events.TodoCreated): void {
-    debug('Running projection for TodoCompleted');
+    debug('Running projection for TodoCreated', event);
 
     const todo =  new TodoDto();
 
@@ -27,7 +33,7 @@ export class TodoProjections {
   }
 
   public [Handle(events.TodoCompleted)](event: events.TodoCompleted): void {
-    debug('Running projection for TodoCompleted');
+    debug('Running projection for TodoCompleted', event);
 
     this.todos.findById(event.id)
       .then(todo => {
@@ -38,7 +44,7 @@ export class TodoProjections {
   }
 
   public [Handle(events.TodoUncompleted)](event: events.TodoUncompleted): void {
-    debug('Running projection for TodoUncompleted');
+    debug('Running projection for TodoUncompleted', event);
 
     this.todos.findById(event.id)
       .then(todo => {
@@ -49,7 +55,7 @@ export class TodoProjections {
   }
 
   public [Handle(events.TodoDescriptionUpdated)](event: events.TodoDescriptionUpdated): void {
-    debug('Running projection for TodoDescriptionUpdated');
+    debug('Running projection for TodoDescriptionUpdated', event);
 
     this.todos.findById(event.id)
       .then(todo => {
@@ -58,6 +64,3 @@ export class TodoProjections {
       });
   }
 }
-
-//   this.bus.register(TransactionStatusChanged, this);
-//       this.bus.register(TransactionBilletCreated, this);

@@ -4,7 +4,6 @@ import * as Boom from 'boom';
 
 import { inject } from 'inversify';
 import { provide } from '@cashfarm/plow';
-import { IController } from '@cashfarm/tractor/interfaces';
 import { Endpoint } from '@cashfarm/tractor/decorators';
 
 import { Todo } from './domain/todo';
@@ -12,7 +11,8 @@ import { TodoStore } from './data/todoStore';
 import { TodoRepository } from './data/todoRepository';
 
 import { Controller } from '@cashfarm/tractor';
-const debug = require('debug')('todos:ctrl');
+import { Guid } from '@cashfarm/lang';
+const debug = require('debug')('todos:ctrl'); // What is this second "Argument"?
 
 @Controller
 export class TodoController {
@@ -45,7 +45,7 @@ export class TodoController {
     if (req.payload.done)
       todo.complete();
 
-    return reply(this.store.save(todo));
+    return reply(this.repository.save(todo));
   }
 
   @Endpoint('GET', '/todos/{id}', {
@@ -73,7 +73,9 @@ export class TodoController {
     }
   })
   public async update(req: Hapi.Request, reply: Hapi.ReplyNoContinue) {
-    const todo = await this.repository.getById(req.payload.id);
+    const todo = await this.repository.getById(new Guid(req.params.id));
+
+    debug(todo);
 
     if (!todo) {
       return reply(Boom.notFound(`Todo with id ${req.params.id} could not be found`));

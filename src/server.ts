@@ -6,7 +6,7 @@ import { createServer, ITractorServer } from '@cashfarm/tractor';
 import { IEventStore, EventBus, RabbitMQTransport, IEventBus } from '@cashfarm/plow';
 import { eventStore } from './db';
 
-import { PlowConfig } from '@cashfarm/plow';
+import { PlowConfig, Projections } from '@cashfarm/plow';
 
 PlowConfig.appPackageName = '@cashfarm/examples-todo-api';
 
@@ -29,6 +29,9 @@ export const server = createServer(
 
   container.bind(IEventStore).toConstantValue(eventStore);
   container.bind(IEventBus).toConstantValue(new EventBus('todos', new RabbitMQTransport()));
+
+  require('./data/projections');
+  console.log(container.get(Projections));
 
   // if running directly, start the server
   if (!module.parent) {

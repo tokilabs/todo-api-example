@@ -1,5 +1,5 @@
 import { Guid, SerializeOptions, Expose } from '@cashfarm/lang';
-import { DomainException, ESAggregateRoot } from '@cashfarm/plow';
+import { DomainException, ESAggregateRoot, Apply } from '@cashfarm/plow';
 import * as events from './events';
 
 export class Todo extends ESAggregateRoot<Guid> {
